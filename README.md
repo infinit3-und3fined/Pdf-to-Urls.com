@@ -1,21 +1,32 @@
-# PDF to URLs Extractor
+<div align="center">
+  <h1>📄 PDF to URLs Extractor</h1>
+  <p>Extract, manage, and export clickable URLs from any PDF document with ease</p>
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+  [![GitHub stars](https://img.shields.io/github/stars/infinit3-und3fined/Pdf-to-Urls.com)](https://github.com/infinit3-und3fined/Pdf-to-Urls.com/stargazers)
+  [![GitHub issues](https://img.shields.io/github/issues/infinit3-und3fined/Pdf-to-Urls.com)](https://github.com/infinit3-und3fined/Pdf-to-Urls.com/issues)
+  
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Finfinit3-und3fined%2FPdf-to-Urls.com)
+  [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/infinit3-und3fined/Pdf-to-Urls.com)
+</div>
 
-A web application that extracts clickable URLs from PDF documents. This tool helps you quickly extract all web links present in a PDF file.
+🔗 **Extract and manage clickable URLs from PDFs** with this intuitive web app. Fast, simple, and built with modern web technologies.
 
-## Features
+## ✨ Features
 
-- Upload PDF files and extract clickable URLs
-- View extracted URLs in a clean, organized list
-- Copy individual URLs or download all as a text file
-- Simple and intuitive user interface
-- Fast processing of PDF documents
+- 📤 **Easy Upload** - Drag & drop or select PDF files
+- 🔗 **URL Extraction** - Automatically finds and extracts all clickable links
+- 📋 **Copy & Export** - Copy individual links or download all as a text file
+- ⚡ **Fast Processing** - Quick extraction even for large PDFs
+- 🎨 **Clean Interface** - Modern, responsive design that works on any device
+- 🔒 **Privacy First** - All processing happens in your browser, no server uploads
 
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- npm or yarn
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 
 ### Installation
 
@@ -50,18 +61,32 @@ A web application that extracts clickable URLs from PDF documents. This tool hel
 3. View the extracted URLs
 4. Copy individual links or download all URLs as a text file
 
-## Technologies Used
+## 🛠️ Built With
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- PDF.js
+<div align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/PDF.js-F7DF1E?style=for-the-badge&logo=pdf&logoColor=red" alt="PDF.js" />
+</div>
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## License
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-This project is open source and available under the [MIT License](LICENSE).
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## 🙏 Acknowledgments
+
+- [PDF.js](https://mozilla.github.io/pdf.js/) - For making PDF processing in the browser possible
+- [Shadcn UI](https://ui.shadcn.com/) - For the beautiful component library
+- [Vite](https://vitejs.dev/) - For the amazing development experience
