@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Upload, ExternalLink, Copy, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const ExtractUrls = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -64,11 +62,9 @@ const ExtractUrls = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen">
+      <main className="py-12 px-4 md:px-6">
+        <div className="container max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
               Extract URLs from PDF
@@ -171,9 +167,7 @@ const ExtractUrls = () => {
             </Card>
           </div>
         </div>
-      </div>
-
-      <Footer />
+      </main>
     </div>
   );
 };

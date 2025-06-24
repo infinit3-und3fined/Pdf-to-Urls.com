@@ -1,12 +1,37 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Search, MessageSquare, Lock, FileText, User, Clock, Zap, Code, Image, Shield, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+const categories = [
+  { id: 'general', name: 'General', icon: <MessageSquare className="w-4 h-4 mr-2" /> },
+  { id: 'security', name: 'Security', icon: <Lock className="w-4 h-4 mr-2" /> },
+  { id: 'features', name: 'Features', icon: <Zap className="w-4 h-4 mr-2" /> },
+  { id: 'account', name: 'Account', icon: <User className="w-4 h-4 mr-2" /> },
+  { id: 'billing', name: 'Billing', icon: <FileText className="w-4 h-4 mr-2" /> },
+];
+
+const getCategoryIcon = (categoryId: string) => {
+  switch (categoryId) {
+    case 'security':
+      return <Lock className="w-5 h-5 text-blue-500" />;
+    case 'features':
+      return <Zap className="w-5 h-5 text-purple-500" />;
+    case 'account':
+      return <User className="w-5 h-5 text-green-500" />;
+    case 'billing':
+      return <FileText className="w-5 h-5 text-yellow-500" />;
+    default:
+      return <MessageSquare className="w-5 h-5 text-blue-500" />;
+  }
+};
 
 const FAQ = () => {
+  const [activeCategory, setActiveCategory] = useState('general');
+  const [searchQuery, setSearchQuery] = useState('');
   const faqs = [
     {
       question: "How secure is my file?",
@@ -46,77 +71,130 @@ const FAQ = () => {
     },
     {
       question: "How do I track views on my shared PDFs?",
-      answer: "View tracking is available for users with accounts. You can see detailed analytics including view counts, referrer information, and geographic data in your dashboard."
+      answer: "View tracking is available for users with accounts. You can see detailed analytics including view counts, referrer information, and geographic data in your dashboard.",
+      category: 'account'
     }
   ];
 
+  // Filter FAQs based on search query and active category
+  const filteredFaqs = faqs.filter(
+    (faq) =>
+      (activeCategory === 'general' || faq.category === activeCategory) &&
+      (faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        faq.answer.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Find answers to common questions about PDFtoURLs tools and features
-            </p>
-            
-            {/* Search Bar */}
-            <div className="max-w-md mx-auto relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
-                placeholder="Search FAQ..."
-                className="pl-10"
-              />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          Find answers to common questions about our PDF tools and services
+        </p>
+      </div>
+
+      <div className="max-w-4xl mx-auto mb-12 relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <Input
+          type="text"
+          placeholder="Search FAQs..."
+          className="pl-10 py-6 text-base"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Categories */}
+        <div className="md:w-64 flex-shrink-0">
+          <div className="sticky top-24 space-y-1">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setActiveCategory(category.id)}
+                className={`w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors ${
+                  activeCategory === category.id
+                    ? 'bg-blue-50 text-blue-700 font-medium'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {category.icon}
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ List */}
+        <div className="flex-1">
+          {filteredFaqs.length > 0 ? (
+            <div className="space-y-4">
+              {filteredFaqs.map((faq, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value={`item-${index}`} className="border-0">
+                      <AccordionTrigger className="hover:no-underline px-6 py-4">
+                        <div className="flex items-center">
+                          {getCategoryIcon(faq.category || 'general')}
+                          <span className="ml-3 font-medium text-left">{faq.question}</span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 pb-4 text-gray-600">
+                        <div className="pl-8">
+                          <p>{faq.answer}</p>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </Card>
+              ))}
             </div>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Common Questions</CardTitle>
-              <CardDescription>
-                Everything you need to know about using PDFtoURLs
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Accordion type="single" collapsible className="space-y-2">
-                {faqs.map((faq, index) => (
-                  <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg px-4">
-                    <AccordionTrigger className="text-left font-medium hover:text-blue-600">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 leading-relaxed">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </CardContent>
-          </Card>
-
-          {/* Contact Section */}
-          <div className="mt-12 text-center">
-            <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0">
-              <CardHeader>
-                <CardTitle className="text-2xl">Still have questions?</CardTitle>
-                <CardDescription className="text-blue-100">
-                  We're here to help! Contact our support team for personalized assistance.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                  Contact Support
-                </button>
-              </CardContent>
-            </Card>
-          </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="mx-auto w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                <Search className="h-8 w-8 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
+              <p className="text-gray-500">
+                We couldn't find any FAQs matching your search. Try different keywords or check back later.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-4"
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveCategory('general');
+                }}
+              >
+                Clear filters
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
-      <Footer />
+      <div className="mt-16">
+        <Card className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 overflow-hidden">
+          <div className="p-8 md:p-12">
+            <div className="md:flex md:items-center md:justify-between">
+              <div className="md:w-2/3">
+                <h3 className="text-2xl font-semibold mb-3">Still have questions?</h3>
+                <p className="text-blue-100 mb-6 md:mb-0">
+                  Can't find the answer you're looking for? Our support team is here to help you 24/7.
+                </p>
+              </div>
+              <div className="space-y-3 sm:space-y-0 sm:space-x-3">
+                <Button variant="outline" className="bg-white text-blue-600 hover:bg-gray-50 w-full sm:w-auto">
+                  Contact Support
+                </Button>
+                <Button variant="ghost" className="text-white hover:bg-white/10 w-full sm:w-auto">
+                  Visit Help Center
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
