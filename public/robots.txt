@@ -1,0 +1,20 @@
+
+User-agent: *
+Allow: /
+Allow: /features
+Allow: /tool/pdf-link-extractor
+Allow: /terms
+Allow: /privacy
+
+# Block private/dynamic content
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /login
+Disallow: /signup
+Disallow: /view/*
+
+# Sitemap location
+Sitemap: https://pdftourls.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
