@@ -1,14 +1,16 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Upload, Link, QrCode, Copy, Share2, Eye, Lock } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Upload, Link as LinkIcon, QrCode, Copy, Eye, Lock, Loader2, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { ToolLayout } from "@/components/tools/ToolLayout";
+import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
 
 const PdfToUrl = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -76,175 +78,240 @@ const PdfToUrl = () => {
     });
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              PDF to URL Generator
-            </h1>
-            <p className="text-xl text-gray-600">
-              Upload your PDF and get a shareable link, QR code, and embed code instantly
-            </p>
-          </div>
+  const resetForm = () => {
+    setFile(null);
+    setResults(null);
+    setPassword('');
+    setPasswordProtection(false);
+  };
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {/* Upload Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Upload className="w-5 h-5" />
-                  <span>Upload PDF</span>
-                </CardTitle>
-                <CardDescription>
-                  Choose a PDF file to generate shareable links (max 10MB)
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="pdf-upload"
-                  />
-                  <label htmlFor="pdf-upload" className="cursor-pointer">
-                    <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                    <p className="text-lg font-medium text-gray-700">
-                      {file ? file.name : "Click to upload or drag and drop"}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2">PDF files up to 10MB</p>
+  return (
+    <ToolLayout
+      title="PDF to URL Generator"
+      description="Upload your PDF and get a shareable link, QR code, and embed code"
+      icon={LinkIcon}
+      color="from-blue-500 to-indigo-600"
+    >
+      <Tabs defaultValue="upload" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-8">
+          <TabsTrigger value="upload" className="flex items-center gap-2">
+            <Upload className="w-4 h-4" />
+            Upload PDF
+          </TabsTrigger>
+          <TabsTrigger 
+            value="link" 
+            className="flex items-center gap-2" 
+            disabled={!results}
+          >
+            <LinkIcon className="w-4 h-4" />
+            Share Link
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="upload" className="p-6">
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="pdf-upload" className="text-base">PDF File</Label>
+                <div className="flex items-center justify-center w-full">
+                  <label
+                    htmlFor="pdf-upload"
+                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors group"
+                  >
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6 px-4 text-center">
+                      <Upload className="w-10 h-10 mb-3 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                      <p className="mb-2 text-sm text-slate-500">
+                        <span className="font-semibold">Click to upload</span> or drag and drop
+                      </p>
+                      <p className="text-xs text-slate-400">PDF (max. 10MB)</p>
+                      {file && (
+                        <p className="mt-4 text-sm font-medium text-slate-800">
+                          {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        </p>
+                      )}
+                    </div>
+                    <input
+                      id="pdf-upload"
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
                   </label>
                 </div>
+              </div>
 
-                {/* Password Protection */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password-protection" className="flex items-center space-x-2">
-                      <Lock className="w-4 h-4" />
-                      <span>Password Protection</span>
-                    </Label>
-                    <Switch
-                      id="password-protection"
-                      checked={passwordProtection}
-                      onCheckedChange={setPasswordProtection}
-                    />
+              <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="password-protection">Password Protection</Label>
+                    <p className="text-sm text-slate-500">Secure your PDF with a password</p>
                   </div>
-                  
-                  {passwordProtection && (
-                    <div>
+                  <Switch
+                    id="password-protection"
+                    checked={passwordProtection}
+                    onCheckedChange={setPasswordProtection}
+                  />
+                </div>
+
+                {passwordProtection && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-2">
                       <Label htmlFor="password">Password</Label>
                       <Input
                         id="password"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter password"
+                        placeholder="Enter a strong password"
+                        className="mt-1"
                       />
-                    </div>
-                  )}
-                </div>
-
-                <Button 
-                  onClick={handleProcess} 
-                  disabled={!file || isProcessing}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  {isProcessing ? "Processing..." : "Generate Links"}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Results Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Share2 className="w-5 h-5" />
-                  <span>Your Results</span>
-                </CardTitle>
-                <CardDescription>
-                  Share your PDF using these generated links and codes
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {results ? (
-                  <>
-                    {/* Short URL */}
-                    <div className="space-y-2">
-                      <Label className="flex items-center space-x-2">
-                        <Link className="w-4 h-4" />
-                        <span>Short URL</span>
-                      </Label>
-                      <div className="flex space-x-2">
-                        <Input value={results.shortUrl} readOnly />
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => copyToClipboard(results.shortUrl, "Short URL")}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* QR Code */}
-                    <div className="space-y-2">
-                      <Label className="flex items-center space-x-2">
-                        <QrCode className="w-4 h-4" />
-                        <span>QR Code</span>
-                      </Label>
-                      <div className="bg-white p-4 rounded border text-center">
-                        <div className="w-32 h-32 mx-auto bg-gray-900 rounded mb-4"></div>
-                        <Button variant="outline" size="sm">
-                          Download QR Code
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Embed Code */}
-                    <div className="space-y-2">
-                      <Label>HTML Embed Code</Label>
-                      <div className="flex space-x-2">
-                        <Input value={results.embedCode} readOnly />
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => copyToClipboard(results.embedCode, "Embed code")}
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <div className="flex items-center space-x-2 text-blue-700">
-                        <Eye className="w-4 h-4" />
-                        <span className="font-medium">0 views</span>
-                      </div>
-                      <p className="text-sm text-blue-600 mt-1">
-                        Track views and engagement in your dashboard
+                      <p className="mt-1 text-xs text-slate-500">
+                        This password will be required to view the PDF
                       </p>
                     </div>
-                  </>
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Share2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>Upload and process a PDF to see your results here</p>
-                  </div>
+                  </motion.div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
+              </div>
+            </div>
 
-      <Footer />
-    </div>
+            <Button
+              size="lg"
+              className="w-full"
+              onClick={handleProcess}
+              disabled={!file || isProcessing}
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <QrCode className="w-4 h-4 mr-2" />
+                  Generate Shareable Link
+                </>
+              )}
+            </Button>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="link" className="p-6">
+          {results && (
+            <div className="space-y-8">
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Your PDF is Ready to Share!</h3>
+                <p className="text-slate-500">Use the options below to share your PDF</p>
+              </div>
+
+              <Card>
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">Shareable Link</CardTitle>
+                    <div className="flex items-center space-x-2">
+                      {results.isPasswordProtected && (
+                        <Badge variant="secondary" className="flex items-center">
+                          <Lock className="w-3 h-3 mr-1" />
+                          Protected
+                        </Badge>
+                      )}
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                        Active
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div>
+                      <Label className="text-sm font-medium mb-2 block">Short URL</Label>
+                      <div className="flex">
+                        <div className="flex-1 bg-slate-50 rounded-l-lg p-3 border border-slate-200 border-r-0 text-sm truncate font-mono">
+                          {results.shortUrl}
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="rounded-l-none border-l-0"
+                          onClick={() => copyToClipboard(results.shortUrl, 'URL')}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <Label className="text-sm font-medium mb-2 block">QR Code</Label>
+                        <div className="space-y-4">
+                          <div className="bg-white p-4 rounded-lg border border-slate-200 inline-block">
+                            <img src={results.qrCode} alt="QR Code" className="w-40 h-40" />
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = results.qrCode;
+                                link.download = 'pdf-qrcode.png';
+                                link.click();
+                              }}
+                            >
+                              Download
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-sm font-medium mb-2 block">Embed Code</Label>
+                        <div className="relative">
+                          <pre className="bg-slate-50 p-4 rounded-lg border border-slate-200 overflow-x-auto text-sm font-mono h-40">
+                            {results.embedCode}
+                          </pre>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => copyToClipboard(results.embedCode, 'Embed code')}
+                          >
+                            <Copy className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <p className="mt-2 text-sm text-slate-500">
+                          Add this code to your website to embed the PDF viewer
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="bg-slate-50 px-6 py-4 border-t flex justify-between">
+                  <Button variant="outline" onClick={() => {
+                    setFile(null);
+                    setResults(null);
+                    setPassword('');
+                    setPasswordProtection(false);
+                  }}>
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Another PDF
+                  </Button>
+                  <div className="flex items-center space-x-2 text-sm text-slate-500">
+                    <Eye className="w-4 h-4" />
+                    <span>This link will expire in 30 days</span>
+                  </div>
+                </CardFooter>
+              </Card>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </ToolLayout>
   );
 };
 

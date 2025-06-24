@@ -7,7 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, FileText, Check, Copy, QrCode, Share, ExternalLink, Shield, Eye, Download, Link } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const FileUploadZone = () => {
+interface FileUploadZoneProps {
+  onFileSelected?: (file: File) => void;
+}
+
+const FileUploadZone = ({ onFileSelected }: FileUploadZoneProps) => {
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -87,6 +91,11 @@ const FileUploadZone = () => {
   const handleUpload = async (uploadFile: File) => {
     setUploading(true);
     setUploadProgress(0);
+    
+    // Call the onFileSelected callback if provided
+    if (onFileSelected) {
+      onFileSelected(uploadFile);
+    }
 
     // Simulate upload progress
     const progressInterval = setInterval(() => {
