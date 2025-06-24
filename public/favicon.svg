@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#2563EB"/>
-  <path d="M8 12C8 9.79086 9.79086 8 12 8H20C22.2091 8 24 9.79086 24 12V20C24 22.2091 22.2091 24 20 24H12C9.79086 24 8 22.2091 8 20V12Z" fill="white"/>
-  <path d="M14 12H18V14H14V12Z" fill="#2563EB"/>
-  <path d="M14 16H18V18H14V16Z" fill="#2563EB"/>
-  <path d="M14 20H16V22H14V20Z" fill="#2563EB"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="64" height="64" rx="12" fill="#3B82F6"/>
+  
+  <!-- Document -->
+  <rect x="16" y="12" width="32" height="40" rx="2" fill="white"/>
+  <rect x="20" y="20" width="24" height="2" fill="#3B82F6"/>
+  <rect x="20" y="26" width="20" height="2" fill="#3B82F6"/>
+  <rect x="20" y="32" width="16" height="2" fill="#3B82F6"/>
+  
+  <!-- Link Chain -->
+  <path d="M42 40L48 40C49.1046 40 50 40.8954 50 42V52C50 53.1046 49.1046 54 48 54H36C34.8954 54 34 53.1046 34 52V48" stroke="white" stroke-width="2"/>
+  <path d="M22 24L16 24C14.8954 24 14 24.8954 14 26V36C14 37.1046 14.8954 38 16 38H28C29.1046 38 30 37.1046 30 36V32" stroke="white" stroke-width="2"/>
+  <path d="M42 40L38 36L42 40Z" fill="white"/>
+  <path d="M22 24L26 28L22 24Z" fill="white"/>
 </svg>
